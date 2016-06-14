@@ -69,11 +69,13 @@ class vcPlay: UIViewController
         self.view.addSubview(m_viewTopBar)
     }
     
+    //~ Tao button goi y
     func initSugestionButton()
     {
         
     }
     
+    //~ Tao button dap an
     func initAnswerButton()
     {
         
