@@ -38,6 +38,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                     </view>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="modal" identifier="sgPlayToHome" id="SNP-5P-GoB"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o1X-n6-euN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
