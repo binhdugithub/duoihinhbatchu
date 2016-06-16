@@ -19,9 +19,14 @@ class vcPlay: UIViewController
     var m_viewSugestion : UIView!
     var m_viewHelp : UIView!
     
+    var m_arrayAnswer : [UIButton] = [UIButton]()
+    var m_arraySugestion : [UIButton] = [UIButton]()
+    var m_answer : String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initShow()
+        self.initAnswerButton()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -72,7 +77,7 @@ class vcPlay: UIViewController
         // Question view
         var l_rectQuestionView = CGRectMake(0, 0, 0, 0)
         l_rectQuestionView.size.width = UIScreen.mainScreen().bounds.size.width
-        l_rectQuestionView.size.height = 1.0/3 * UIScreen.mainScreen().bounds.size.height
+        l_rectQuestionView.size.height = 2.0/5 * UIScreen.mainScreen().bounds.size.height
         l_rectQuestionView.origin.y = l_rectTopBar.size.height
         m_viewQuestion = UIView(frame: l_rectQuestionView)
         m_viewQuestion.backgroundColor = UIColor.yellowColor()
@@ -80,7 +85,7 @@ class vcPlay: UIViewController
         // Answer view
         var l_rectAnswerView = CGRectMake(0, 0, 0, 0)
         l_rectAnswerView.size.width = UIScreen.mainScreen().bounds.size.width
-        l_rectAnswerView.size.height = 1.0/6 * UIScreen.mainScreen().bounds.size.height
+        l_rectAnswerView.size.height = 1.0/7 * UIScreen.mainScreen().bounds.size.height
         l_rectAnswerView.origin.y = l_rectQuestionView.origin.y + l_rectQuestionView.size.height
         m_viewAnswer = UIView(frame: l_rectAnswerView)
         m_viewAnswer.backgroundColor = UIColor.orangeColor()
@@ -96,7 +101,7 @@ class vcPlay: UIViewController
         // Sugestion view
         var l_rectSugestionView = CGRectMake(0, 0, 0, 0)
         l_rectSugestionView.size.width = UIScreen.mainScreen().bounds.size.width
-        l_rectSugestionView.size.height = 1.0/4 * UIScreen.mainScreen().bounds.size.height
+        l_rectSugestionView.size.height = 1.0/5 * UIScreen.mainScreen().bounds.size.height
         l_rectSugestionView.origin.y = l_rectHelpView.origin.y + l_rectHelpView.size.height
         m_viewSugestion = UIView(frame: l_rectSugestionView)
         m_viewSugestion.backgroundColor = UIColor.redColor()
@@ -117,9 +122,72 @@ class vcPlay: UIViewController
     //~ Tao button dap an
     func initAnswerButton()
     {
+        CreateSuggestResult(m_answer)
+        
+        var rSquare = CGRectMake(0, 0, 0, 0)
+        let w = 4.0/43 * UIScreen.mainScreen().bounds.width
+        let spaceW = (UIScreen.mainScreen().bounds.width - 9 * w)/10
+        let spaceH = 1.0/3 * (m_viewSugestion.frame.size.height - 5 * w)
+        let x = 1.0/2 * (view.frame.size.width - 9 * (w + spaceW))
+        rSquare.size.width = w
+        rSquare.size.height = w
+        rSquare.origin.x = spaceW
+        rSquare.origin.y = spaceH
+        
+        for i in 0..<2
+        {
+            rSquare.origin.y = spaceH + CGFloat(i) * (spaceH + w)
+            for j in 0..<9
+            {
+                rSquare.origin.x = x + CGFloat(j) * (spaceW + w)
+                let btnSquare : UIButton = UIButton(frame: rSquare)
+                
+                btnSquare.layer.borderWidth = 1
+                btnSquare.layer.cornerRadius = 5.0
+                btnSquare.setTitle(" ", forState: .Normal)
+                btnSquare.setTitleColor(UIColor.cyanColor(), forState: .Highlighted)
+                btnSquare.setTitleShadowColor(UIColor.blackColor(), forState: .Highlighted)
+                btnSquare.backgroundColor = UIColor.darkGrayColor()
+//                btnSquare.addTarget(self, action: #selector(vcPlay.btnAnswer_Click(_:)), forControlEvents: .TouchUpInside)
+                m_viewSugestion.addSubview(btnSquare)
+                m_arrayAnswer.append(btnSquare)
+            }
+        }
         
     }
     //-----------------
+    
+    func CreateSuggestResult(endRult: String) -> String
+    {
+        //print(endRult)
+        var str = endRult
+        var str1 : String = ""
+        
+        
+        for _ in 0..<(Constants.NUM_RANDOM_BUTTON - str.characters.count) //(int i= 0 ; i < NUM_RANDOM_BUTTON - [enResult length] ; i++)
+        {
+            
+            let k : Int = Int(arc4random()) % Constants.Alphabet.count
+            
+            let ch = Constants.Alphabet[k]
+            str.append(ch)
+        }
+        //print("+++++++++++++++++++")
+        while (str.characters.count > 0)
+        {
+            
+            let j : Int = Int(arc4random()) % str.characters.count
+            let range = Range<String.Index>(str.startIndex.advancedBy(j)..<str.startIndex.advancedBy(j+1))
+            let sub : String = str.substringWithRange(range)
+            
+            str1 += sub
+            str = str.stringByReplacingOccurrencesOfString(sub, withString: "", options: .LiteralSearch , range: range)
+            //print(str + "/" + sub)
+        }
+        //print("+++++++++++++++++++")
+        return str1
+    }
+
     
     // Function go to home
     func BackToHome(sender: UIButton!)
