@@ -8,6 +8,6 @@
 
 class Constants
 {
-    static let NUM_RANDOM_BUTTON = 18
+    static let NUM_RANDOM_BUTTON = 20
     static let Alphabet : [Character] = ["Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","K","L","X","C","V","B","N","M"]
 }

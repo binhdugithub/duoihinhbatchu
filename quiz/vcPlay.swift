@@ -123,27 +123,27 @@ class vcPlay: UIViewController
     func initAnswerButton()
     {
         CreateSuggestResult(m_answer)
-        
         var rSquare = CGRectMake(0, 0, 0, 0)
-        let w = 4.0/43 * UIScreen.mainScreen().bounds.width
-        let spaceW = (UIScreen.mainScreen().bounds.width - 9 * w)/10
-        let spaceH = 1.0/3 * (m_viewSugestion.frame.size.height - 5 * w)
-        let x = 1.0/2 * (view.frame.size.width - 9 * (w + spaceW))
+        let w = 12.0/(7 * CGFloat(Constants.NUM_RANDOM_BUTTON)) * UIScreen.mainScreen().bounds.width
         rSquare.size.width = w
-        rSquare.size.height = w
-        rSquare.origin.x = spaceW
+        rSquare.size.height = 3.0/2 * w
+
+        let spaceW = 1.0/6 * w
+        let spaceH = 1.0/3 * (m_viewSugestion.frame.size.height - 2 * rSquare.size.height)
+        
+        rSquare.origin.x = spaceW / 2
         rSquare.origin.y = spaceH
         
         for i in 0..<2
         {
-            rSquare.origin.y = spaceH + CGFloat(i) * (spaceH + w)
-            for j in 0..<9
+            rSquare.origin.y = spaceH + CGFloat(i) * (spaceH + rSquare.size.height)
+            for j in 0..<(Constants.NUM_RANDOM_BUTTON/2)
             {
-                rSquare.origin.x = x + CGFloat(j) * (spaceW + w)
+                rSquare.origin.x = spaceW/2 + CGFloat(j) * (spaceW + w)
                 let btnSquare : UIButton = UIButton(frame: rSquare)
                 
                 btnSquare.layer.borderWidth = 1
-                btnSquare.layer.cornerRadius = 5.0
+                btnSquare.layer.cornerRadius = 10.0
                 btnSquare.setTitle(" ", forState: .Normal)
                 btnSquare.setTitleColor(UIColor.cyanColor(), forState: .Highlighted)
                 btnSquare.setTitleShadowColor(UIColor.blackColor(), forState: .Highlighted)
