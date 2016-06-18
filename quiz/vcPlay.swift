@@ -12,8 +12,11 @@ class vcPlay: UIViewController
 {
     var m_viewTopBar : UIView!
     var m_btnBack : UIButton!
-    var m_viewLevel : UIView!
-    var m_viewCoin : UIView!
+    var m_btnMenu : UIButton!
+    var m_btnLevel : UIButton!
+    var m_lblLevel: UILabel!
+    var m_btnCoin : UIButton!
+    
     var m_viewQuestion : UIView!
     var m_viewAnswer : UIView!
     var m_viewSugestion : UIView!
@@ -52,7 +55,7 @@ class vcPlay: UIViewController
         l_rectTopBar.size.width = UIScreen.mainScreen().bounds.size.width
         l_rectTopBar.size.height = 1.0/12 * UIScreen.mainScreen().bounds.size.height
         m_viewTopBar = UIView(frame: l_rectTopBar)
-        m_viewTopBar.backgroundColor = UIColor.darkGrayColor()
+        m_viewTopBar.backgroundColor = UIColor(red: 51.0/255, green: 51.0/255, blue: 51.0/255, alpha: 1)
         
         
         // Back button
@@ -61,21 +64,38 @@ class vcPlay: UIViewController
         l_rectBtnBack.size.height = l_rectTopBar.size.height
         m_btnBack = UIButton(frame: l_rectBtnBack)
         m_btnBack.setTitle("Back", forState: .Normal)
-        m_btnBack.backgroundColor = UIColor.brownColor()
+        m_btnBack.backgroundColor = UIColor(red: 83.0/255, green: 83.0/255, blue: 83.0/255, alpha: 1)
         m_btnBack.addTarget(self, action: #selector(vcPlay.BackToHome(_:)), forControlEvents: .TouchUpInside)
-
         
+        // menu button
+        var l_rectBtnMenu = m_btnBack.frame
+        l_rectBtnMenu.origin.x = m_viewTopBar.frame.size.width - l_rectBtnMenu.size.width
+        l_rectBtnMenu.origin.y = 0
+        m_btnMenu = UIButton(frame: l_rectBtnMenu)
+        m_btnMenu.setTitle("Menu", forState: .Normal)
+        m_btnMenu.backgroundColor = UIColor(red: 83.0/255, green: 83.0/255, blue: 83.0/255, alpha: 1)
+        m_btnMenu.addTarget(self, action: #selector(vcPlay.actionMenu(_:)), forControlEvents: .TouchUpInside)
+
+
         // Coin
         var l_rectCoin = CGRectMake(0, 0, 0, 0)
-        m_viewCoin = UIView(frame: l_rectCoin)
+        l_rectCoin.size.width = 0.5 * (m_viewTopBar.frame.size.width - 3 * m_btnBack.frame.size.width)
+        l_rectCoin.size.height = 1.0/3 * l_rectCoin.size.width
+        l_rectCoin.origin.x = 0.25 * m_btnBack.frame.size.width + m_btnBack.frame.origin.x + m_btnBack.frame.size.width
+        l_rectCoin.origin.y = 0.5 * (m_viewTopBar.frame.size.height - l_rectCoin.size.height)
+        m_btnCoin = UIButton(frame: l_rectCoin)
+        m_btnCoin.setImage(UIImage(named: "coin"), forState: .Normal)
         
         // Level
-        var l_rectLevel = CGRectMake(0, 0, 0, 0)
-        m_viewLevel = UIView(frame: l_rectLevel)
+        var l_rectLevel = m_btnCoin.frame
+        l_rectLevel.origin.x = m_btnMenu.frame.origin.x - l_rectLevel.size.width - 0.25 * m_btnBack.frame.size.width
+        m_btnLevel = UIButton(frame: l_rectLevel)
+        m_btnLevel.setImage(UIImage(named: "level"), forState: .Normal)
         
         m_viewTopBar.addSubview(m_btnBack)
-        m_viewTopBar.addSubview(m_viewCoin)
-        m_viewTopBar.addSubview(m_viewLevel)
+         m_viewTopBar.addSubview(m_btnMenu)
+        m_viewTopBar.addSubview(m_btnCoin)
+        m_viewTopBar.addSubview(m_btnLevel)
         
         // Question view
         var l_rectQuestionView = CGRectMake(0, 0, 0, 0)
@@ -252,6 +272,12 @@ class vcPlay: UIViewController
     func BackToHome(sender: UIButton!)
     {
         self.performSegueWithIdentifier("sgPlayToHome", sender: self)
+    }
+    
+    // Function go to home
+    func actionMenu(sender: UIButton!)
+    {
+        //self.performSegueWithIdentifier("sgPlayToHome", sender: self)
     }
     
 }
