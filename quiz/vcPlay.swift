@@ -18,15 +18,18 @@ class vcPlay: UIViewController
     var m_viewAnswer : UIView!
     var m_viewSugestion : UIView!
     var m_viewHelp : UIView!
+    var m_btnAsk : UIButton!
+    var m_btnHint : UIButton!
     
     var m_arrayAnswer : [UIButton] = [UIButton]()
     var m_arraySugestion : [UIButton] = [UIButton]()
-    var m_answer : String = ""
+    var m_answer : String = "firework"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initShow()
-        self.initAnswerButton()
+        self.initAnswerButton(8)
+        self.initSugestionButton()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -80,15 +83,15 @@ class vcPlay: UIViewController
         l_rectQuestionView.size.height = 2.0/5 * UIScreen.mainScreen().bounds.size.height
         l_rectQuestionView.origin.y = l_rectTopBar.size.height
         m_viewQuestion = UIView(frame: l_rectQuestionView)
-        m_viewQuestion.backgroundColor = UIColor.yellowColor()
+        //m_viewQuestion.backgroundColor = UIColor.yellowColor()
         
         // Answer view
         var l_rectAnswerView = CGRectMake(0, 0, 0, 0)
         l_rectAnswerView.size.width = UIScreen.mainScreen().bounds.size.width
-        l_rectAnswerView.size.height = 1.0/7 * UIScreen.mainScreen().bounds.size.height
+        l_rectAnswerView.size.height = 3.0/20 * UIScreen.mainScreen().bounds.size.height
         l_rectAnswerView.origin.y = l_rectQuestionView.origin.y + l_rectQuestionView.size.height
         m_viewAnswer = UIView(frame: l_rectAnswerView)
-        m_viewAnswer.backgroundColor = UIColor.orangeColor()
+        //m_viewAnswer.backgroundColor = UIColor.orangeColor()
         
         // Help view
         var l_rectHelpView = CGRectMake(0, 0, 0, 0)
@@ -96,7 +99,32 @@ class vcPlay: UIViewController
         l_rectHelpView.size.height = 1.0/12 * UIScreen.mainScreen().bounds.size.height
         l_rectHelpView.origin.y = l_rectAnswerView.origin.y + l_rectAnswerView.size.height
         m_viewHelp = UIView(frame: l_rectHelpView)
-        m_viewHelp.backgroundColor = UIColor.greenColor()
+        //m_viewHelp.backgroundColor = UIColor.greenColor()
+        
+        // Ask button
+        let x = 15.0/33 * l_rectHelpView.size.width
+        var l_rectAskButton = CGRectMake(0, 0, 0, 0)
+        l_rectAskButton.size.width = x
+        l_rectAskButton.size.height = l_rectHelpView.size.height - 1.0/15 * x
+        l_rectAskButton.origin.x = 1.0/15 * x
+        l_rectAskButton.origin.y = 1.0/2 * (l_rectHelpView.size.height - l_rectAskButton.size.height)
+        m_btnAsk = UIButton(frame: l_rectAskButton)
+        m_btnAsk.backgroundColor = UIColor.blueColor()
+        m_btnAsk.layer.cornerRadius = 8.0
+        m_btnAsk.setTitle("ASK FACEBOOK", forState: .Normal)
+        
+        // Hint button
+        var l_rectHintButton = CGRectMake(0, 0, 0, 0)
+        l_rectHintButton.size = l_rectAskButton.size
+        l_rectHintButton.origin.x = l_rectAskButton.origin.x + l_rectAskButton.size.width + 1.0/15 * x
+        l_rectHintButton.origin.y = l_rectAskButton.origin.y
+        m_btnHint = UIButton(frame: l_rectHintButton)
+        m_btnHint.backgroundColor = UIColor.purpleColor()
+        m_btnHint.layer.cornerRadius = 8.0
+        m_btnHint.setTitle("USE A HINT", forState: .Normal)
+        
+        m_viewHelp.addSubview(m_btnAsk)
+        m_viewHelp.addSubview(m_btnHint)
         
         // Sugestion view
         var l_rectSugestionView = CGRectMake(0, 0, 0, 0)
@@ -104,7 +132,7 @@ class vcPlay: UIViewController
         l_rectSugestionView.size.height = 1.0/5 * UIScreen.mainScreen().bounds.size.height
         l_rectSugestionView.origin.y = l_rectHelpView.origin.y + l_rectHelpView.size.height
         m_viewSugestion = UIView(frame: l_rectSugestionView)
-        m_viewSugestion.backgroundColor = UIColor.redColor()
+        //m_viewSugestion.backgroundColor = UIColor.redColor()
         
         self.view.addSubview(m_viewTopBar)
         self.view.addSubview(m_viewQuestion)
@@ -116,44 +144,75 @@ class vcPlay: UIViewController
     //~ Tao button goi y
     func initSugestionButton()
     {
-        
-    }
-    
-    //~ Tao button dap an
-    func initAnswerButton()
-    {
-        CreateSuggestResult(m_answer)
+        let str = CreateSuggestResult(m_answer)
         var rSquare = CGRectMake(0, 0, 0, 0)
-        let w = 12.0/(7 * CGFloat(Constants.NUM_RANDOM_BUTTON)) * UIScreen.mainScreen().bounds.width
+        let w = 12.0/(7 * CGFloat(Constants.NUM_RANDOM_BUTTON)) * m_viewSugestion.frame.size.width
+        let h = 4.0/11 * m_viewSugestion.frame.size.height
         rSquare.size.width = w
-        rSquare.size.height = 3.0/2 * w
-
+        rSquare.size.height = h
+        print("w = \(w) & h = \(h)")
         let spaceW = 1.0/6 * w
-        let spaceH = 1.0/3 * (m_viewSugestion.frame.size.height - 2 * rSquare.size.height)
+        let spaceH = 1.0/4 * h
         
         rSquare.origin.x = spaceW / 2
         rSquare.origin.y = spaceH
         
         for i in 0..<2
         {
-            rSquare.origin.y = spaceH + CGFloat(i) * (spaceH + rSquare.size.height)
+            rSquare.origin.y = spaceH + CGFloat(i) * (spaceH + h)
             for j in 0..<(Constants.NUM_RANDOM_BUTTON/2)
             {
                 rSquare.origin.x = spaceW/2 + CGFloat(j) * (spaceW + w)
                 let btnSquare : UIButton = UIButton(frame: rSquare)
                 
                 btnSquare.layer.borderWidth = 1
-                btnSquare.layer.cornerRadius = 10.0
-                btnSquare.setTitle(" ", forState: .Normal)
-                btnSquare.setTitleColor(UIColor.cyanColor(), forState: .Highlighted)
+                btnSquare.layer.cornerRadius = 5.0
+                btnSquare.setTitleColor(UIColor.blackColor(), forState: .Normal)
                 btnSquare.setTitleShadowColor(UIColor.blackColor(), forState: .Highlighted)
-                btnSquare.backgroundColor = UIColor.darkGrayColor()
-//                btnSquare.addTarget(self, action: #selector(vcPlay.btnAnswer_Click(_:)), forControlEvents: .TouchUpInside)
-                m_viewSugestion.addSubview(btnSquare)
-                m_arrayAnswer.append(btnSquare)
+                btnSquare.backgroundColor = UIColor.yellowColor()
+                btnSquare.tag = i * Constants.NUM_RANDOM_BUTTON/2 + j
+                
+                if (btnSquare.tag < str.characters.count)
+                {
+                    let range = Range<String.Index>(str.startIndex.advancedBy(btnSquare.tag)..<str.startIndex.advancedBy(btnSquare.tag + 1))
+                    btnSquare.setTitle(str.substringWithRange(range), forState: .Normal)
+                    //                    btnSquare.addTarget(self, action: #selector(vcPlay.btnSuggestion_Click(_:)), forControlEvents: .TouchUpInside)
+                    m_viewSugestion.addSubview(btnSquare)
+                    m_arraySugestion.append(btnSquare)
+                }
             }
         }
-        
+    }
+    
+    //~ Tao button dap an
+    func initAnswerButton(count : Int)
+    {
+        var rSquare = CGRectMake(0, 0, 0, 0)
+        let w = 12.0/(7 * 25) * m_viewAnswer.frame.size.width
+        let h = 4.0/11 * m_viewAnswer.frame.size.height
+        rSquare.size.width = w
+        rSquare.size.height = h
+        print("w = \(w) & h = \(h)")
+        let spaceW = 1.0/6 * w
+        let spaceH = 1.0/4 * h
+        let left = 1.0/2 * (m_viewAnswer.frame.size.width - CGFloat(count) * (w + spaceW))
+        rSquare.origin.y = 1.0/2 * (m_viewAnswer.frame.size.height - h)
+        for i in 0..<count
+        {
+            rSquare.origin.x = left + CGFloat(i) * (spaceW + w)
+            let btnSquare : UIButton = UIButton(frame: rSquare)
+            
+            btnSquare.layer.borderWidth = 1
+            btnSquare.layer.cornerRadius = 5.0
+            btnSquare.setTitle(" ", forState: .Normal)
+            btnSquare.setTitleColor(UIColor.cyanColor(), forState: .Highlighted)
+            btnSquare.setTitleShadowColor(UIColor.blackColor(), forState: .Highlighted)
+            btnSquare.backgroundColor = UIColor.whiteColor()
+//            btnSquare.addTarget(self, action: #selector(vcPlay.btnAnswer_Click(_:)), forControlEvents: .TouchUpInside)
+            m_viewAnswer.addSubview(btnSquare)
+            m_arrayAnswer.append(btnSquare)
+
+        }
     }
     //-----------------
     
