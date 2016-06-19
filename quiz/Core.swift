@@ -14,6 +14,7 @@ class Core: NSObject
     
     var m_level: Int!
     var m_coin: Int!
+    var m_arrayImageQuestion : [ImageQuestion] = [ImageQuestion]()
     
     private override init()
     {
@@ -30,7 +31,11 @@ class Core: NSObject
         
         if dicData != nil
         {
-            
+            for (p_name, p_completed) in dicData!
+            {
+                let l_imageQuestion: ImageQuestion = ImageQuestion(l_name: p_name as! String, l_completed : p_completed as! Bool)
+                m_arrayImageQuestion.append(l_imageQuestion)
+            }
         }
         else
         {

@@ -18,6 +18,7 @@ class vcPlay: UIViewController
     var m_btnCoin : UIButton!
     
     var m_viewQuestion : UIView!
+    var m_picQuestion : UIImageView!
     var m_viewAnswer : UIView!
     var m_viewSugestion : UIView!
     var m_viewHelp : UIView!
@@ -31,8 +32,9 @@ class vcPlay: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initShow()
-        self.initAnswerButton(8)
-        self.initSugestionButton()
+//        self.initAnswerButton(8)
+//        self.initSugestionButton()
+        loadQuestionToView()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -93,7 +95,7 @@ class vcPlay: UIViewController
         m_btnLevel.setImage(UIImage(named: "level"), forState: .Normal)
         
         m_viewTopBar.addSubview(m_btnBack)
-         m_viewTopBar.addSubview(m_btnMenu)
+        m_viewTopBar.addSubview(m_btnMenu)
         m_viewTopBar.addSubview(m_btnCoin)
         m_viewTopBar.addSubview(m_btnLevel)
         
@@ -104,6 +106,14 @@ class vcPlay: UIViewController
         l_rectQuestionView.origin.y = l_rectTopBar.size.height
         m_viewQuestion = UIView(frame: l_rectQuestionView)
         //m_viewQuestion.backgroundColor = UIColor.yellowColor()
+        var l_rectQuestionImage = CGRectMake(0, 0, 0, 0)
+        l_rectQuestionImage.size.width = 3.0/4 * l_rectQuestionView.size.width
+        l_rectQuestionImage.size.height = 3.0/4 * l_rectQuestionView.size.height
+        l_rectQuestionImage.origin.x = 1.0/2 * (l_rectQuestionView.size.width - l_rectQuestionImage.size.width)
+        l_rectQuestionImage.origin.y = 1.0/2 * (l_rectQuestionView.size.height - l_rectQuestionImage.size.height)
+        m_picQuestion = UIImageView(frame: l_rectQuestionImage)
+        m_picQuestion.image = UIImage(named: "firework.jpg")
+        m_viewQuestion.addSubview(m_picQuestion)
         
         // Answer view
         var l_rectAnswerView = CGRectMake(0, 0, 0, 0)
@@ -196,7 +206,7 @@ class vcPlay: UIViewController
                 {
                     let range = Range<String.Index>(str.startIndex.advancedBy(btnSquare.tag)..<str.startIndex.advancedBy(btnSquare.tag + 1))
                     btnSquare.setTitle(str.substringWithRange(range), forState: .Normal)
-                    //                    btnSquare.addTarget(self, action: #selector(vcPlay.btnSuggestion_Click(_:)), forControlEvents: .TouchUpInside)
+                    btnSquare.addTarget(self, action: #selector(vcPlay.SugestionButtonClick(_:)), forControlEvents: .TouchUpInside)
                     m_viewSugestion.addSubview(btnSquare)
                     m_arraySugestion.append(btnSquare)
                 }
@@ -214,7 +224,6 @@ class vcPlay: UIViewController
         rSquare.size.height = h
         print("w = \(w) & h = \(h)")
         let spaceW = 1.0/6 * w
-        let spaceH = 1.0/4 * h
         let left = 1.0/2 * (m_viewAnswer.frame.size.width - CGFloat(count) * (w + spaceW))
         rSquare.origin.y = 1.0/2 * (m_viewAnswer.frame.size.height - h)
         for i in 0..<count
@@ -228,7 +237,7 @@ class vcPlay: UIViewController
             btnSquare.setTitleColor(UIColor.cyanColor(), forState: .Highlighted)
             btnSquare.setTitleShadowColor(UIColor.blackColor(), forState: .Highlighted)
             btnSquare.backgroundColor = UIColor.whiteColor()
-//            btnSquare.addTarget(self, action: #selector(vcPlay.btnAnswer_Click(_:)), forControlEvents: .TouchUpInside)
+            btnSquare.addTarget(self, action: #selector(vcPlay.AnswerButtonClick(_:)), forControlEvents: .TouchUpInside)
             m_viewAnswer.addSubview(btnSquare)
             m_arrayAnswer.append(btnSquare)
 
@@ -246,8 +255,8 @@ class vcPlay: UIViewController
         for _ in 0..<(Constants.NUM_RANDOM_BUTTON - str.characters.count) //(int i= 0 ; i < NUM_RANDOM_BUTTON - [enResult length] ; i++)
         {
             
-            let k : Int = Int(arc4random()) % Constants.Alphabet.count
-            
+            var k : Int = Int(rand())
+            k = k % Constants.Alphabet.count
             let ch = Constants.Alphabet[k]
             str.append(ch)
         }
@@ -255,7 +264,7 @@ class vcPlay: UIViewController
         while (str.characters.count > 0)
         {
             
-            let j : Int = Int(arc4random()) % str.characters.count
+            let j : Int = Int(rand()) % str.characters.count
             let range = Range<String.Index>(str.startIndex.advancedBy(j)..<str.startIndex.advancedBy(j+1))
             let sub : String = str.substringWithRange(range)
             
@@ -266,7 +275,134 @@ class vcPlay: UIViewController
         //print("+++++++++++++++++++")
         return str1
     }
+    
+    // Function sugestion button click
+    func SugestionButtonClick(sender : UIButton) -> Void
+    {
+        if sender.currentTitle == " "
+        {
+            return
+        }
+        
+        //SoundController.Instance.ButtonClick()
+        m_viewQuestion.superview?.bringSubviewToFront(m_viewAnswer)
+        for i in 0..<m_arrayAnswer.count
+        {
+            if m_arrayAnswer[i].currentTitle == " "
+            {
+                let l_sizeTemp = sender.frame.size
+                let l_originAnswerTemp = m_arrayAnswer[i].frame.origin
+                let l_originSugestionTemp = sender.frame.origin
+                let l_kc = m_viewAnswer.frame.size.height + m_viewHelp.frame.size.height
+                
+                m_arrayAnswer[i].setTitle(sender.currentTitle, forState: .Normal)
+                m_arrayAnswer[i].setTitleColor(sender.currentTitleColor, forState: .Normal)
+                m_arrayAnswer[i].backgroundColor = sender.backgroundColor
+                m_arrayAnswer[i].tag = sender.tag
+                sender.setTitle(" ", forState: .Normal)
+                sender.backgroundColor = UIColor.whiteColor()
+                sender.frame.size = m_arrayAnswer[i].frame.size
+                m_arrayAnswer[i].frame.size = l_sizeTemp
+                m_arrayAnswer[i].frame.origin.x = l_originSugestionTemp.x
+                m_arrayAnswer[i].frame.origin.y = l_originSugestionTemp.y + l_kc
+                
+                sender.frame.origin.x = l_originAnswerTemp.x
+                sender.frame.origin.y = l_originAnswerTemp.y - l_kc
+                print("Answer: \(sender.frame.origin)")
+                print("Sugestion: \(m_arrayAnswer[i].frame.origin)")
 
+                UIView.animateWithDuration(0.1, animations:
+                    {
+                        //SoundController.ShareInstance.Play(SoundController.type.PlaySwap)
+                        self.m_arrayAnswer[i].frame.origin = l_originAnswerTemp
+                        self.m_arrayAnswer[i].frame.size = sender.frame.size
+                    }, completion: { (finished:Bool) in
+                        sender.frame.origin = l_originSugestionTemp
+                        sender.frame.size = l_sizeTemp
+                        sender.hidden = true
+                        sender.setTitle(self.m_arrayAnswer[i].currentTitle, forState: .Normal)
+                        //self.m_arrayAnswer[i].shake(.y)
+                        
+                })
+                break
+            }
+        }
+        
+        AnswerCheck()
+    }
+    
+    // Function answer button click
+    func AnswerButtonClick(sender : UIButton)
+    {
+        if sender.currentTitle == " "
+        {
+            return
+        }
+        //SoundController.Instance.LetterRemove()
+        for i in m_arraySugestion
+        {
+            if i.tag == sender.tag
+            {
+                i.hidden = false
+                i.setTitle(sender.currentTitle, forState: .Normal)
+                i.backgroundColor = sender.backgroundColor
+                sender.setTitle(" ", forState: .Normal)
+                sender.backgroundColor = UIColor.whiteColor()
+            }
+        }
+        
+    }
+    
+    func AnswerCheck()
+    {
+        var str : String = ""
+        for i in 0..<m_arrayAnswer.count
+        {
+            if m_arrayAnswer[i].currentTitle != " "
+            {
+                str += m_arrayAnswer[i].currentTitle!
+            }
+        }
+        if str == m_answer
+        {
+            // Corrected
+        }
+        else
+        {
+            if (str.characters.count == m_answer.characters.count)
+            {
+                for i in m_arrayAnswer
+                {
+                    i.setTitleColor(UIColor.redColor(), forState: .Normal)
+                }
+                UIView.animateWithDuration(0.3, animations:
+                    {
+                        for i in self.m_arrayAnswer{
+                            i.shake(.x)
+                        }
+                    }, completion: {(finished:Bool) in
+                        for i in self.m_arrayAnswer
+                        {
+                            i.setTitleColor(UIColor.blackColor(), forState: .Normal)
+                        }
+                })
+            }
+        }
+    }
+
+    func loadQuestionToView()
+    {
+        if Core.Instance.m_level > Core.Instance.m_arrayImageQuestion.count {
+            return
+        }
+        else{
+            let l_photo = Core.Instance.m_arrayImageQuestion[Core.Instance.m_level - 1]
+            m_picQuestion.image = UIImage(named: "\(l_photo.m_name).jpg")
+            m_answer = l_photo.m_name.uppercaseString
+            initAnswerButton(m_answer.characters.count)
+            initSugestionButton()
+        }
+    }
     
     // Function go to home
     func BackToHome(sender: UIButton!)
@@ -277,7 +413,7 @@ class vcPlay: UIViewController
     // Function go to home
     func actionMenu(sender: UIButton!)
     {
-        //self.performSegueWithIdentifier("sgPlayToHome", sender: self)
+        self.performSegueWithIdentifier("sgPlayToHome", sender: self)
     }
     
 }

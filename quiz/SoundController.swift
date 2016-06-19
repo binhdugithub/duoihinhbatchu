@@ -59,26 +59,13 @@ class SoundController: NSObject
         
     }
     
-    func Play(playType : type)
+    func ButtonClick()
     {
-        if m_ismuted == true
-        {
-            return
-        }
-        switch playType
-        {
-        case .PlayClick:
-            playSound("click", ofType: "mp3")
-        case .PlayCongratulation:
-            playSound("congratulation", ofType: "mp3")
-        case .PlayGameOver:
-            playSound("gameover", ofType: "mp3")
-        case .WinCoin:
-            playSound("correct", ofType: "mp3")
-        case .PlaySwap:
-            playSound("fail", ofType: "mp3")
-        }
-        
-        
+        playSound("ButtonClick", ofType: "mp3")
+    }
+    
+    func LetterRemove()
+    {
+        playSound("LetterRemove", ofType: "mp3")
     }
 }
