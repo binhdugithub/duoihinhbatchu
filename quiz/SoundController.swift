@@ -13,7 +13,7 @@ import AVFoundation
 class SoundController: NSObject
 {
     static let Instance = SoundController()
-    var m_audioPlay = AVAudioPlayer()
+    var m_audioClick = AVAudioPlayer()
     var m_ismuted: Bool!
     
     enum type
@@ -27,7 +27,20 @@ class SoundController: NSObject
     
     override init()
     {
-        
+        do
+        {
+            let l_pathSound = NSBundle.mainBundle().pathForResource("ButtonClick", ofType: "mp3")
+            let l_audioSound = NSURL.fileURLWithPath(l_pathSound!)
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: .DefaultToSpeaker)
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            m_audioClick = try AVAudioPlayer(contentsOfURL: l_audioSound)
+            
+        }
+        catch let l_error as NSError
+        {
+            print("\(l_error)")
+        }
     }
     
     func ChangeMute()
@@ -37,35 +50,17 @@ class SoundController: NSObject
         Configuration.Instance.WriteMute(l_IsMute)
     }
     
-    func playSound(name: String?, ofType: String?)
-    {
-        do
-        {
-            let l_pathSound = NSBundle.mainBundle().pathForResource(name, ofType: ofType)
-            let l_audioSound = NSURL.fileURLWithPath(l_pathSound!)
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: .DefaultToSpeaker)
-            try AVAudioSession.sharedInstance().setActive(true)
-            
-            m_audioPlay = try AVAudioPlayer(contentsOfURL: l_audioSound)
-            m_audioPlay.currentTime = 0
-            m_audioPlay.prepareToPlay()
-            m_audioPlay.play()
-        }
-        catch let l_error as NSError
-        {
-            print("\(l_error)")
-        }
-        
-        
-    }
-    
     func ButtonClick()
     {
-        playSound("ButtonClick", ofType: "mp3")
+        m_audioClick.currentTime = 0
+        m_audioClick.prepareToPlay()
+        m_audioClick.play()
     }
     
     func LetterRemove()
     {
-        playSound("LetterRemove", ofType: "mp3")
+        m_audioClick.currentTime = 0
+        m_audioClick.prepareToPlay()
+        m_audioClick.play()
     }
 }

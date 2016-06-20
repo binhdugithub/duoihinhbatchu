@@ -284,7 +284,7 @@ class vcPlay: UIViewController
             return
         }
         
-        //SoundController.Instance.ButtonClick()
+        SoundController.Instance.ButtonClick()
         m_viewQuestion.superview?.bringSubviewToFront(m_viewAnswer)
         for i in 0..<m_arrayAnswer.count
         {
